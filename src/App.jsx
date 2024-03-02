@@ -23,7 +23,6 @@ function App() {
                 setError(false);
                 setLoading(true);
                 const data = await photoApi(query, page);
-                console.log(data);
                 setArrPhoto(oldPhoto => [...oldPhoto, ...data.results]);
                 setTotalPages(data.total_pages);
             } catch (error) {
