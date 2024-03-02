@@ -11,5 +11,6 @@ export default async function photoApi(query, page) {
             per_page: 12,
         },
     });
-    return response.data.results;
+    // console.log(response.data);
+    return response.data;
 }

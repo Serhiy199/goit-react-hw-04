@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import './App.css';
 import photoApi from './photo-api.js';
 import SearchBar from './components/SearchBar/SearchBar.jsx';
@@ -15,6 +15,7 @@ function App() {
     const [page, setPage] = useState(1);
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [clickPhoto, setClickPhoto] = useState([]);
+    const [totalPages, setTotalPages] = useState();
 
     useEffect(() => {
         async function getPhoto() {
@@ -22,7 +23,9 @@ function App() {
                 setError(false);
                 setLoading(true);
                 const data = await photoApi(query, page);
-                setArrPhoto(oldPhoto => [...oldPhoto, ...data]);
+                console.log(data);
+                setArrPhoto(oldPhoto => [...oldPhoto, ...data.results]);
+                setTotalPages(data.total_pages);
             } catch (error) {
                 setError(true);
             } finally {
@@ -40,6 +43,7 @@ function App() {
     const handClickLoadMore = () => {
         setPage(page + 1);
     };
+
     return (
         <>
             <SearchBar onSubmit={handClickForm} />
@@ -48,13 +52,15 @@ function App() {
                 onClickPhoto={setClickPhoto}
                 onOpenModal={setModalIsOpen}
             />
-            {arrPhoto.length > 9 && !loading && <LoadMoreBtn onClick={handClickLoadMore} />}
+            {totalPages > 1 && !loading && totalPages !== page && (
+                <LoadMoreBtn onClick={handClickLoadMore} />
+            )}
             {error && <p>Whoops, something went wrong! Please try reloading this page!</p>}
             {loading && <Loader />}
             <ImageModal
                 onOpen={modalIsOpen}
                 onClickPhoto={clickPhoto}
-                onOpenModal={setModalIsOpen}
+                onCloseModal={setModalIsOpen}
             />
         </>
     );

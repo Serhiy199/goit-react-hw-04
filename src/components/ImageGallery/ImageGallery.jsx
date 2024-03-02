@@ -6,7 +6,7 @@ export default function ImageGallery({ listPhoto, onClickPhoto, onOpenModal }) {
         <ul className={list}>
             {listPhoto.map(list => {
                 return (
-                    <li key={list.urls}>
+                    <li key={list.id}>
                         <ImageCard
                             list={list}
                             onClickPhoto={onClickPhoto}
