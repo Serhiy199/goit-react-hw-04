@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import './App.css';
 import photoApi from './photo-api.js';
 import SearchBar from './components/SearchBar/SearchBar.jsx';
 import ImageGallery from './components/ImageGallery/ImageGallery.jsx';
 import Loader from './components/Loader/Loader.jsx';
 import LoadMoreBtn from './components/LoadMoreBtn/LoadMoreBtn.jsx';
+import ImageModal from './components/ImageModal/ImageModal.jsx';
 
 function App() {
     const [arrPhoto, setArrPhoto] = useState([]);
@@ -12,6 +13,8 @@ function App() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [page, setPage] = useState(1);
+    const [modalIsOpen, setModalIsOpen] = useState(false);
+    const [clickPhoto, setClickPhoto] = useState([]);
 
     useEffect(() => {
         async function getPhoto() {
@@ -37,14 +40,22 @@ function App() {
     const handClickLoadMore = () => {
         setPage(page + 1);
     };
-    console.log(arrPhoto);
     return (
         <>
             <SearchBar onSubmit={handClickForm} />
-            <ImageGallery listPhoto={arrPhoto} />
+            <ImageGallery
+                listPhoto={arrPhoto}
+                onClickPhoto={setClickPhoto}
+                onOpenModal={setModalIsOpen}
+            />
             {arrPhoto.length > 9 && !loading && <LoadMoreBtn onClick={handClickLoadMore} />}
             {error && <p>Whoops, something went wrong! Please try reloading this page!</p>}
             {loading && <Loader />}
+            <ImageModal
+                onOpen={modalIsOpen}
+                onClickPhoto={clickPhoto}
+                onOpenModal={setModalIsOpen}
+            />
         </>
     );
 }
